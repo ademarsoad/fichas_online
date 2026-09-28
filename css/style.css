@@ -1,0 +1,448 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #007bff;
+    margin-bottom: 30px;
+}
+
+/* Seleção de Aluno */
+.select-aluno {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#aluno-select {
+    padding: 10px;
+    font-size: 1em;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+/* Área de Ficha e Banco */
+.ficha-area {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.banco-exercicios, .ficha-treino {
+    flex: 1;
+    background-color: #e9ecef;
+    padding: 20px;
+    border-radius: 8px;
+    min-height: 500px;
+    border: 2px dashed #adb5bd;
+}
+
+.banco-exercicios {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    overflow-y: auto;
+}
+
+.ficha-treino {
+    border-color: #007bff;
+    position: relative;
+}
+
+.placeholder-text {
+    color: #adb5bd;
+    text-align: center;
+    padding-top: 50px;
+}
+
+/* Itens de Exercício (Arrastáveis) */
+.exercicio-item {
+    background: #007bff;
+    color: white;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    cursor: grab;
+    transition: background-color 0.2s;
+}
+
+.exercicio-item:hover {
+    background-color: #0056b3;
+}
+
+.exercicio-item.dragging {
+    opacity: 0.5;
+    border: 2px dashed #333;
+}
+
+/* Itens de Exercício na Ficha (Organizados) */
+.treino-item {
+    background: #ffffff;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    cursor: move; /* Indica que pode ser reordenado */
+}
+
+.treino-item input {
+    width: 50px;
+    padding: 5px;
+    margin-left: 10px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+
+.treino-item label {
+    font-weight: 600;
+}
+
+.remove-ex {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Botão Salvar */
+.btn-salvar {
+    display: block;
+    width: 300px;
+    margin: 20px auto;
+    padding: 15px;
+    font-size: 1.2em;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-salvar:hover:not(:disabled) {
+    background-color: #218838;
+}
+
+.btn-salvar:disabled {
+    background-color: #adb5bd;
+    cursor: not-allowed;
+}
+
+/* Estilo para a zona de drop quando arrastando */
+.ficha-treino.drag-over {
+    background-color: #d1e7dd;
+    border-color: #28a745;
+}
+ /* Estilos específicos para a visualização da ficha */
+        .ficha-view {
+            max-width: 800px;
+            margin: 50px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-ficha {
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .header-ficha h1 {
+            color: #007bff;
+            text-align: left;
+            margin: 0;
+        }
+
+        .header-ficha p {
+            font-size: 0.9em;
+            color: #555;
+        }
+
+        .treino-lista {
+            list-style: none;
+            padding: 0;
+        }
+
+        .treino-lista li {
+            background: #63acf5;
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .exercicio-detalhe {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .parametros span {
+            display: inline-block;
+            margin-left: 20px;
+            padding: 5px 10px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+
+        .ficha-vazia {
+            text-align: center;
+            padding: 50px 0;
+            color: #888;
+            font-size: 1.2em;
+        }
+
+        .progresso {
+            margin-top: 20px;
+        }
+
+        .barra {
+            background: #ddd;
+            border-radius: 20px;
+            overflow: hidden;
+            height: 20px;
+        }
+
+        .barra span {
+            display: block;
+            height: 100%;
+            background: #4caf50;
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .conquista {
+            margin-top: 20px;
+            padding: 10px;
+            background: #ffe082;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        textarea {
+            resize: none;
+            width: 100%;
+            border-radius: 15px;
+            padding: 5px;
+        }
+
+        .check_a {
+            width: 20px;
+            height: 20px;
+        }
+
+        #display {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 1.2em;
+            cursor: pointer;
+            border-radius: 15px;
+            
+        }
+        .cronometro {
+            text-align: center;
+        }
+
+        @media screen and (max-width: 720px) {
+            body {
+                padding: 0;
+            }
+
+            .ficha-view {
+                max-width: 800px;
+                margin: 15px auto;
+                background: #fff;
+                padding: 5px;
+                border-radius: 10px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            }
+
+            .treino-lista li {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+
+            .parametros {
+                display: flex;
+                margin: 10px 0 10px 0;
+            }
+
+            input[type=checkbox] {
+                width: 20px;
+                height: 20px;
+            }
+
+            .exercicio-obs {
+                width: 100%;
+            }
+
+        }
+ /* Estilos específicos para a visualização da ficha */
+        .ficha-view, .cont-prog {
+            max-width: 800px;
+            margin: 50px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-ficha {
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .header-ficha h1 {
+            color: #007bff;
+            text-align: left;
+            margin: 0;
+        }
+
+        .header-ficha p {
+            font-size: 0.9em;
+            color: #555;
+        }
+
+        .treino-lista {
+            list-style: none;
+            padding: 0;
+        }
+
+        .treino-lista li {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .exercicio-detalhe {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .parametros span {
+            display: inline-block;
+            margin-left: 20px;
+            padding: 5px 10px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+
+        .ficha-vazia {
+            text-align: center;
+            padding: 50px 0;
+            color: #888;
+            font-size: 1.2em;
+        }
+
+        .mytabs {
+            display: flex;
+            flex-wrap: wrap;
+            width: 100%;
+            margin: 50px auto;
+
+        }
+
+        .mytabs input[type=radio] {
+            display: none;
+        }
+
+        .mytabs label {
+            padding: 10px;
+            background-color: #e2e2e2;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .mytabs .tab {
+            width: 100%;
+            padding: 15px;
+            background-color: white;
+            order: 1;
+            display: none;
+        }
+
+        .tab {
+            display: inline-block;
+
+        }
+
+        .cad_exer input,
+        select {
+            margin: 10px 0;
+        }
+
+        .mytabs input[type=radio]:checked+label+.tab {
+            display: block;
+        }
+
+
+        .mytabs input[type=radio]:checked+label {
+            background-color: white;
+        }
+/* Efeito para a tela cadastro */
+
+.cont_cadastro {
+    width: 80%;
+    margin: 0 auto;
+    background-color: white;
+    padding: 12px;
+    border-radius: 25px;
+    
+}
+.cadastro {
+    display: flex;
+    flex-direction: column;
+    margin: 25px;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+.cadastro input {
+    border-radius: 15px;
+    padding: 10px;
+}
+.cadastro input:nth-child(7) {
+    background-color: red;
+    margin-top: 15px;
+}
