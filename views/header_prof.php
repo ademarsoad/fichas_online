@@ -19,8 +19,8 @@
 
 <nav>
     <div>
-        <a href="visualizar_ficha.php?id_login=<?php echo $alunoId ?>">Ficha</a>
-            <a href="frequencia_aluno.php?id_login=<?php echo $alunoId ?>">Frequencia</a>
+        <a href="cadastro_aluno.php">Cadastro Aluno</a>
+            <a href="meusalunos.php?idProfessor=<?php echo $_SESSION['professor']; ?>">Meus Alunos</a>
             <a href="sair.php">Sair</a>
         </div>
 </nav>

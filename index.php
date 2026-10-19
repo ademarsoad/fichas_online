@@ -153,6 +153,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       border-radius:10px; 
       margin-bottom:20px;
     }
+   
   </style>
 </head>
 <body>

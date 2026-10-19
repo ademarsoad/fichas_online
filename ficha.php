@@ -86,11 +86,9 @@ foreach ($exercicios as $ex) {
 
 <body>
     <section>
-        <menu>
-            <a href="cadastro_aluno.php">Cadastro Aluno</a>
-            <a href="meusalunos.php?idProfessor=<?php echo $_SESSION['professor']; ?>">Meus Alunos</a>
-            <a href="sair.php">Sair</a>
-        </menu>
+        <header>
+            <?php include("views/header_prof.php"); ?>
+        </header>
     </section>
     <div class="container">
         <h1>Montar Ficha de Treino</h1>

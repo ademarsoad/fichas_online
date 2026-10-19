@@ -53,8 +53,7 @@ if (!empty($alunoId)) {
 
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     $dataPresenca = date('Y-m-d', strtotime($result['data_presenca']));
-    echo $dataPresenca . "<br>";
-    echo $datahoje;
+  
 
     if ($dataPresenca == $datahoje) {
         echo "Data já existe";
@@ -90,7 +89,7 @@ if (!empty($alunoId)) {
 
 <body>
     <header>
-        <?php include("views/header.php"); ?>
+        <?php include("views/header_aluno.php"); ?>
     </header>
     <div class="ficha-view">
         <div class="header-ficha">
