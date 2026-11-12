@@ -177,6 +177,7 @@ $facebookShareUrl = "https://www.facebook.com/sharer/sharer.php?u=" . rawurlenco
             display: flex;
             align-items: center;
             justify-content: center;
+            
             font-weight: 700;
             color: #fff;
             box-shadow: 0 4px 10px rgba(2, 6, 23, 0.06);
@@ -200,7 +201,9 @@ $facebookShareUrl = "https://www.facebook.com/sharer/sharer.php?u=" . rawurlenco
             font-size: 11px;
             color: #666;
         }
-
+        .tempo {
+            font-size: 10px;
+        }
         /* Gráfico e estatísticas */
         .grid-2 {
             display: grid;
@@ -330,6 +333,9 @@ $facebookShareUrl = "https://www.facebook.com/sharer/sharer.php?u=" . rawurlenco
                                 <?php echo $label; ?>
                                 <div class="small-date"><?php echo $shortDate; ?></div>
                             </div>
+                            <div class="tempo small-date">
+                                    00:55:45
+                            </div>
                         <?php endforeach; ?>
                     </div>
                 </div>
@@ -376,16 +382,7 @@ $facebookShareUrl = "https://www.facebook.com/sharer/sharer.php?u=" . rawurlenco
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // // Menu toggle (mobile)
-        // function toggleMenu(toggle) {
-        //     toggle.classList.toggle("open");
-        //     var links = document.getElementById('menu-links');
-        //     if (links.style.display === 'flex' || links.style.display === '') {
-        //         links.style.display = 'none';
-        //     } else {
-        //         links.style.display = 'flex';
-        //     }
-        // }
+      
 
         // Dados do PHP para o gráfico
         const presencas = <?php echo json_encode($presencasCount); ?>;

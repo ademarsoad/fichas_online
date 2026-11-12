@@ -53,7 +53,7 @@ if (!empty($alunoId)) {
 
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     $dataPresenca = date('Y-m-d', strtotime($result['data_presenca']));
-  
+
 
     if ($dataPresenca == $datahoje) {
         echo "Data já existe";
@@ -83,7 +83,7 @@ if (!empty($alunoId)) {
     <link rel="stylesheet" href="css/style.css">
 
     <style>
-       
+
     </style>
 </head>
 
@@ -384,30 +384,38 @@ if (!empty($alunoId)) {
         }
 
         document.getElementById("toggle").addEventListener("click", function() {
-            if (!running) {
-                running = true;
-                this.textContent = "Parar";
-                timer = setInterval(() => {
-                    seconds++;
-                    document.getElementById("display").textContent = formatTime(seconds);
-                }, 1000);
-            } else {
-                running = false;
-                this.textContent = "Iniciar";
-                clearInterval(timer);
+                    if (!running) {
+                        running = true;
+                        this.textContent = "Parar";
+                        timer = setInterval(() => {
+                            seconds++;
+                            document.getElementById("display").textContent = formatTime(seconds);
+                        }, 1000);
+                    } else {
+                        running = false;
+                        this.textContent = "Iniciar";
+                        clearInterval(timer);
+                        // Enviar tempo para o servidor
+                        fetch("salvartempo.php", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/x-www-form-urlencoded"
+                                },
+                                body: new URLSearchParams({
+                                    tempo: seconds,
+                                    aluno: <?php echo $alunoId; ?>
+                                })
+                            })
+                            .then(response => response.text())
+                            .then(data => {
+                                console.log(data);
+                            })
+                            .catch(error => {
+                                console.error(error);
+                            });
+                    }
+                });
 
-                // Enviar tempo para o servidor
-                fetch("salvar.php", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/x-www-form-urlencoded"
-                        },
-                        body: "tempo=" + seconds
-                    })
-                    .then(res => res.text())
-                    .then(data => alert(data));
-            }
-        });
     </script>
 
 </body>
