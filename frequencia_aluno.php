@@ -31,7 +31,7 @@ try {
     // Busca os dias de presença do mês atual
     $mesAtual = date('m');
     $anoAtual = date('Y');
-    $stmt = $pdo->prepare("SELECT data_presenca 
+    $stmt = $pdo->prepare("SELECT data_presenca, tempo_treino
                            FROM frequencia 
                            WHERE id_aluno = ? 
                            AND MONTH(data_presenca) = ? 
@@ -45,9 +45,24 @@ try {
 // Cria array com os dias de presença (apenas para o mês atual)
 $diasPresenca = [];
 $presencaDates = [];
+$temposPorData = [];
+
 foreach ($result as $resultado) {
     $diasPresenca[] = date('d', strtotime($resultado['data_presenca']));
     $presencaDates[] = date('Y-m-d', strtotime($resultado['data_presenca']));
+
+    $data = date('Y-m-d', strtotime($resultado['data_presenca']));
+
+    $segundos = $resultado['tempo_treino'];
+
+    if ($segundos) {
+
+        $h = str_pad(floor($segundos / 3600), 2, '0', STR_PAD_LEFT);
+        $m = str_pad(floor(($segundos % 3600) / 60), 2, '0', STR_PAD_LEFT);
+        $s = str_pad($segundos % 60, 2, '0', STR_PAD_LEFT);
+
+        $temposPorData[$data] = "$h:$m:$s";
+    }
 }
 
 // Informações do mês atual
@@ -73,7 +88,8 @@ for ($i = 6; $i >= 0; $i--) {
     $ultimos7[] = [
         'date' => $d,
         'label' => $letter,
-        'present' => $present
+        'present' => $present,
+        'tempo' => $temposPorData[$d] ?? null
     ];
 }
 
@@ -114,7 +130,7 @@ $facebookShareUrl = "https://www.facebook.com/sharer/sharer.php?u=" . rawurlenco
         }
 
         /* Navbar */
-     
+
         /* Container */
         .container {
             max-width: 920px;
@@ -130,11 +146,13 @@ $facebookShareUrl = "https://www.facebook.com/sharer/sharer.php?u=" . rawurlenco
             margin-bottom: 18px;
         }
 
+
+
         .summary {
             display: grid;
             grid-template-columns: 1fr 220px;
             gap: 18px;
-            align-items: center;
+            align-items: start;
         }
 
         .summary-left h3 {
@@ -164,10 +182,18 @@ $facebookShareUrl = "https://www.facebook.com/sharer/sharer.php?u=" . rawurlenco
         /* Dias circulares */
         .dias {
             display: flex;
-            gap: 20px;
-            justify-content: flex-start;
-            margin-top: 14px;
             flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+            align-items: flex-start;
+        }
+
+        .dia-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 70px;
+            min-height: 90px;
         }
 
         .dia {
@@ -177,33 +203,55 @@ $facebookShareUrl = "https://www.facebook.com/sharer/sharer.php?u=" . rawurlenco
             display: flex;
             align-items: center;
             justify-content: center;
-            
             font-weight: 700;
-            color: #fff;
-            box-shadow: 0 4px 10px rgba(2, 6, 23, 0.06);
-            position: relative;
+            color: white;
             font-size: 16px;
         }
 
         .dia.v {
+            background: #28a745;
+        }
+
+        .dia.x {
+            background: #dc3545;
+        }
+
+        .small-date {
+            margin-top: 6px;
+            font-size: 11px;
+            color: #666;
+        }
+
+        .tempo {
+            margin-top: 5px;
+            padding: 3px 8px;
+            border-radius: 12px;
+            background: #e8f1ff;
+            color: #007bff;
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        /* .dia.v {
             background: var(--success);
         }
 
         .dia.x {
             background: var(--danger);
-        }
+        } */
 
-        .dia .small-date {
+        /* .dia .small-date {
             position: absolute;
             bottom: -18px;
             left: 50%;
             transform: translateX(-50%);
             font-size: 11px;
             color: #666;
-        }
-        .tempo {
-            font-size: 10px;
-        }
+        } */
+
+
+
         /* Gráfico e estatísticas */
         .grid-2 {
             display: grid;
@@ -280,35 +328,83 @@ $facebookShareUrl = "https://www.facebook.com/sharer/sharer.php?u=" . rawurlenco
 
         @media (max-width: 768px) {
 
-    .menu-toggle {
-        display: flex;
-    }
+            .menu-toggle {
+                display: flex;
+            }
 
-    #menu-links {
-        position: absolute;
-        top: 60px;
-        right: 0;
-        width: 100%;
-        background: #007bff;
-        flex-direction: column;
+            #menu-links {
+                position: absolute;
+                top: 60px;
+                right: 0;
+                width: 100%;
+                background: #007bff;
+                flex-direction: column;
 
-        max-height: 0;
-        opacity: 0;
-        overflow: hidden;
+                max-height: 0;
+                opacity: 0;
+                overflow: hidden;
 
-        transition: all .4s ease;
-    }
+                transition: all .4s ease;
+            }
 
-    #menu-links.show {
-        max-height: 500px;
-        opacity: 1;
-    }
-}
+            #menu-links.show {
+                max-height: 500px;
+                opacity: 1;
+            }
+
+            .summary {
+                grid-template-columns: 1fr;
+            }
+
+            .summary-right {
+                margin-top: 15px;
+            }
+
+            .summary-left h3 {
+                font-size: 18px;
+            }
+
+            .summary-left p {
+                font-size: 14px;
+            }
+
+            .dias {
+                justify-content: center;
+                gap: 10px;
+            }
+
+            .dia-wrapper {
+                width: 50px;
+            }
+
+            .dia {
+                width: 38px;
+                height: 38px;
+                font-size: 14px;
+            }
+
+            .small-date {
+                font-size: 10px;
+            }
+
+            .tempo {
+                font-size: 8px;
+                padding: 2px 4px;
+            }
+
+            .share-buttons {
+                flex-direction: column;
+            }
+
+            .share-btn {
+                justify-content: center;
+            }
+        }
     </style>
 </head>
 
 <body>
-  <header>
+    <header>
         <?php include("views/header_aluno.php"); ?>
     </header>
 
@@ -324,66 +420,77 @@ $facebookShareUrl = "https://www.facebook.com/sharer/sharer.php?u=" . rawurlenco
 
                     <!-- Dias da semana (últimos 7 dias) -->
                     <div class="dias" aria-hidden="true">
+
                         <?php foreach ($ultimos7 as $d):
                             $cls = $d['present'] ? 'v' : 'x';
                             $label = htmlspecialchars($d['label']);
                             $shortDate = date('d/m', strtotime($d['date']));
                         ?>
-                            <div class="dia <?php echo $cls; ?>">
-                                <?php echo $label; ?>
-                                <div class="small-date"><?php echo $shortDate; ?></div>
-                            </div>
-                            <div class="tempo small-date">
-                                    00:55:45
+                            <div class="dia-wrapper">
+
+                                <div class="dia <?php echo $cls; ?>">
+                                    <?php echo $label; ?>
+                                </div>
+
+                                <div class="small-date">
+                                    <?php echo $shortDate; ?>
+                                </div>
+
+                                <?php if (!empty($d['tempo'])) : ?>
+                                    <div class="tempo">
+                                        <?php echo $d['tempo']; ?>
+                                    </div>
+                                <?php endif; ?>
+
                             </div>
                         <?php endforeach; ?>
                     </div>
+
+                </div>
+            </div>
+
+            <div class="summary-right">
+                <div style="font-size:12px;color:#666;margin-bottom:6px;">Resumo mensal</div>
+                <div class="big"><?php echo $presencasCount; ?> / <?php echo $hojeDia; ?></div>
+                <div style="font-size:12px;color:#666;margin-top:6px;">Presenças até hoje / Dias do mês</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Card gráfico e estatísticas -->
+    <div class="card">
+        <div class="grid-2">
+            <div class="chart-card">
+                <canvas id="frequenciaChart" width="100%" height="300"></canvas>
+            </div>
+
+            <div class="stats">
+                <div class="stat-item"><span>Presenças</span><span style="color:var(--success)"><?php echo $presencasCount; ?></span></div>
+                <div class="stat-item"><span>Faltas</span><span style="color:var(--danger)"><?php echo $faltasCount; ?></span></div>
+                <div class="stat-item"><span>Percentual</span>
+                    <span>
+                        <?php
+                        $totalConsiderado = max(1, $hojeDia);
+                        $percent = round(($presencasCount / $totalConsiderado) * 100);
+                        echo $percent . '%';
+                        ?>
+                    </span>
                 </div>
 
-                <div class="summary-right">
-                    <div style="font-size:12px;color:#666;margin-bottom:6px;">Resumo mensal</div>
-                    <div class="big"><?php echo $presencasCount; ?> / <?php echo $hojeDia; ?></div>
-                    <div style="font-size:12px;color:#666;margin-top:6px;">Presenças até hoje / Dias do mês</div>
+                <div class="share-buttons">
+                    <a class="share-btn whatsapp" href="<?php echo $whatsappLink; ?>" target="_blank" rel="noopener noreferrer">🟢 WhatsApp</a>
+                    <a class="share-btn facebook" href="<?php echo $facebookShareUrl; ?>" target="_blank" rel="noopener noreferrer">🔵 Facebook</a>
+                    <button class="share-btn copy" id="copyShare">📋 Copiar</button>
                 </div>
             </div>
         </div>
-
-        <!-- Card gráfico e estatísticas -->
-        <div class="card">
-            <div class="grid-2">
-                <div class="chart-card">
-                    <canvas id="frequenciaChart" width="100%" height="300"></canvas>
-                </div>
-
-                <div class="stats">
-                    <div class="stat-item"><span>Presenças</span><span style="color:var(--success)"><?php echo $presencasCount; ?></span></div>
-                    <div class="stat-item"><span>Faltas</span><span style="color:var(--danger)"><?php echo $faltasCount; ?></span></div>
-                    <div class="stat-item"><span>Percentual</span>
-                        <span>
-                            <?php
-                            $totalConsiderado = max(1, $hojeDia);
-                            $percent = round(($presencasCount / $totalConsiderado) * 100);
-                            echo $percent . '%';
-                            ?>
-                        </span>
-                    </div>
-
-                    <div class="share-buttons">
-                        <a class="share-btn whatsapp" href="<?php echo $whatsappLink; ?>" target="_blank" rel="noopener noreferrer">🟢 WhatsApp</a>
-                        <a class="share-btn facebook" href="<?php echo $facebookShareUrl; ?>" target="_blank" rel="noopener noreferrer">🔵 Facebook</a>
-                        <button class="share-btn copy" id="copyShare">📋 Copiar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+    </div>
 
     </div>
 
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-      
-
         // Dados do PHP para o gráfico
         const presencas = <?php echo json_encode($presencasCount); ?>;
         const faltas = <?php echo json_encode($faltasCount); ?>;
