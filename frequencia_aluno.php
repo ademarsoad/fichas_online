@@ -77,19 +77,38 @@ $presencasCount = count($presencaDates);
 $faltasCount = max(0, $hojeDia - $presencasCount);
 
 // Dados para os últimos 7 dias (para os círculos)
+// Dias da semana atual (Segunda a Domingo)
 $ultimos7 = [];
-for ($i = 6; $i >= 0; $i--) {
-    $d = date('Y-m-d', strtotime("-{$i} days"));
-    $dow = date('w', strtotime($d)); // 0 (domingo) - 6 (sábado)
-    // Letras em PT: Domingo D, Segunda S, Terça T, Quarta Q, Quinta Q, Sexta S, Sábado S
-    $letters = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
-    $letter = $letters[$dow];
+
+// Descobre a segunda-feira da semana atual
+$segunda = strtotime('monday this week');
+
+// Caso hoje seja domingo, ajusta corretamente
+if (date('w') == 0) {
+    $segunda = strtotime('-6 days');
+}
+
+$diasSemana = [
+    'S', // Segunda
+    'T', // Terça
+    'Q', // Quarta
+    'Q', // Quinta
+    'S', // Sexta
+    'S', // Sábado
+    'D'  // Domingo
+];
+
+for ($i = 0; $i < 7; $i++) {
+
+    $d = date('Y-m-d', strtotime("+{$i} days", $segunda));
+
     $present = in_array($d, $presencaDates, true);
+
     $ultimos7[] = [
-        'date' => $d,
-        'label' => $letter,
-        'present' => $present,
-        'tempo' => $temposPorData[$d] ?? null
+        'date'   => $d,
+        'label'  => $diasSemana[$i],
+        'present'=> $present,
+        'tempo'  => $temposPorData[$d] ?? null
     ];
 }
 
