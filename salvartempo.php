@@ -24,7 +24,8 @@ if (isset($_POST['tempo'])) {
 
     echo "Aluno: $aluno - Tempo: $tempoFormatado";
 
-} else {
+
+ } else {
 
     echo "Nenhum tempo recebido";
 }

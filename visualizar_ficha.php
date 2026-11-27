@@ -81,10 +81,8 @@ if (!empty($alunoId)) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ficha de Treino de <?php echo $alunoNome; ?></title>
     <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <style>
-
-    </style>
 </head>
 
 <body>
@@ -109,7 +107,9 @@ if (!empty($alunoId)) {
     </div>
     <div class="ficha-view">
         <div class="header-ficha">
-            <h1>Ficha de Treino: <?php echo $alunoNome; ?></h1>
+            <h1>
+                <p>Ficha de Treino:</p> <?php echo $alunoNome; ?>
+            </h1>
             <p>Criada em: <strong><?php echo $dataFicha; ?></strong></p>
         </div>
         <div class="mytabs">
@@ -384,38 +384,56 @@ if (!empty($alunoId)) {
         }
 
         document.getElementById("toggle").addEventListener("click", function() {
-                    if (!running) {
-                        running = true;
-                        this.textContent = "Parar";
-                        timer = setInterval(() => {
-                            seconds++;
-                            document.getElementById("display").textContent = formatTime(seconds);
-                        }, 1000);
-                    } else {
-                        running = false;
-                        this.textContent = "Iniciar";
-                        clearInterval(timer);
-                        // Enviar tempo para o servidor
-                        fetch("salvartempo.php", {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/x-www-form-urlencoded"
-                                },
-                                body: new URLSearchParams({
-                                    tempo: seconds,
-                                    aluno: <?php echo $alunoId; ?>
-                                })
-                            })
-                            .then(response => response.text())
-                            .then(data => {
-                                console.log(data);
-                            })
-                            .catch(error => {
-                                console.error(error);
-                            });
-                    }
+            if (!running) {
+                running = true;
+                this.textContent = "Parar";
+                timer = setInterval(() => {
+                    seconds++;
+                    document.getElementById("display").textContent = formatTime(seconds);
+                }, 1000);
+            } else {
+                running = false;
+                this.textContent = "Iniciar";
+                clearInterval(timer);
+
+                // Guarda o tempo antes de zerar
+                const tempoFinal = formatTime(seconds);
+
+                // Mostra o tempo total de treino
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Treino finalizado!',
+                    text: 'Tempo total: ' + tempoFinal
                 });
 
+                // Enviar tempo para o servidor
+                fetch("salvartempo.php", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded"
+                        },
+                        body: new URLSearchParams({
+                            tempo: seconds,
+                            aluno: <?php echo $alunoId; ?>
+                        })
+                    })
+                    .then(response => response.text())
+                    .then(data => {
+                        console.log(data);
+
+                        // Zera o cronômetro após salvar
+                        seconds = 0;
+                        document.getElementById("display").textContent = "00:00:00";
+                    })
+                    .catch(error => {
+                        console.error(error);
+
+                        // Mesmo se der erro, zera o cronômetro
+                        seconds = 0;
+                        document.getElementById("display").textContent = "00:00:00";
+                    });
+            }
+        });
     </script>
 
 </body>
